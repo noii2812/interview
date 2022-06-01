@@ -43,23 +43,21 @@ class _StudentScreenState extends State<StudentScreen>
     super.initState();
   }
 
+  _onEndDrawerChanged(isOpened) {
+    if (!isOpened) {
+      setState(() {
+        selectedStudent = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      onEndDrawerChanged: (isOpened) {
-        if (!isOpened) {
-          setState(() {
-            selectedStudent = null;
-          });
-        }
-      },
+      onEndDrawerChanged: _onEndDrawerChanged,
       key: _scaffoldKey,
-      endDrawer: Container(
-          width: size.width * 0.4,
-          child: AddNewStudent(
-            studentModel: selectedStudent,
-          )),
+      endDrawer: buildStudentScreenEndDrawer(size),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -109,7 +107,15 @@ class _StudentScreenState extends State<StudentScreen>
     );
   }
 
-  showAddStudentButtomSheet({StudentModel? studentModel}) {
+  Container buildStudentScreenEndDrawer(Size size) {
+    return Container(
+        width: size.width * 0.4,
+        child: AddNewStudent(
+          studentModel: selectedStudent,
+        ));
+  }
+
+  showAddStudentButtomSheet() {
     _scaffoldKey.currentState!.openEndDrawer();
   }
 
@@ -134,7 +140,7 @@ class _StudentScreenState extends State<StudentScreen>
             onPressed: () {
               setState(() {});
               selectedStudent = student;
-              showAddStudentButtomSheet(studentModel: student);
+              showAddStudentButtomSheet();
             },
             child: const Icon(Icons.edit)),
       ],

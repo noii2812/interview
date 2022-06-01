@@ -65,7 +65,8 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                     }
                     List<DepartmentModel> students = List<DepartmentModel>.from(
                         snapshot.data!.docs
-                            .map((e) => DepartmentModel.from(e))).toList();
+                            .map((e) => DepartmentModel.from(e))).toList()
+                      ..sort((a, b) => a.name.compareTo(b.name));
                     return DataTable(
                         headingTextStyle:
                             const TextStyle(fontWeight: FontWeight.bold),
@@ -91,33 +92,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
   }
 
   buildAddNewDepartmentButton(size) {
-    return Container(
-      // color: Colors.red,
-      width: size.width * 0.7,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Color(0xff000000),
-            ),
-            width: 150,
-            height: 50,
-            child: TextButton(
-              // style: B,
-              style: ButtonStyle(),
-              onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
-              child: const Text(
-                "Add New Department",
-                style: TextStyle(color: Colors.white),
-              ),
-              // style: ButtonStyle(backgroundColor: ButtonState.all(Colors.blue)),
-            ),
-          )
-        ],
-      ),
-    );
+    return ScreeTitleWidget(scaffoldKey: _scaffoldKey);
   }
 
   DataCell buildOptionsButtons(DepartmentModel student) {
@@ -145,5 +120,55 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
       default:
         return "";
     }
+  }
+}
+
+class ScreeTitleWidget extends StatelessWidget {
+  const ScreeTitleWidget({
+    Key? key,
+    required GlobalKey<ScaffoldState> scaffoldKey,
+  })  : _scaffoldKey = scaffoldKey,
+        super(key: key);
+
+  final GlobalKey<ScaffoldState> _scaffoldKey;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      // color: Colors.red,
+      width: size.width * 0.7,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              Text(
+                "Department",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+              ),
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Color(0xff000000),
+            ),
+            width: 150,
+            height: 50,
+            child: TextButton(
+              // style: B,
+              style: ButtonStyle(),
+              onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
+              child: const Text(
+                "Add New Department",
+                style: TextStyle(color: Colors.white),
+              ),
+              // style: ButtonStyle(backgroundColor: ButtonState.all(Colors.blue)),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

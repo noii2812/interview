@@ -5,6 +5,8 @@ import 'package:soknoy_interview/model/student_model.dart';
 import 'package:soknoy_interview/utils/crud.dart';
 import 'dart:js' as js;
 
+import 'package:soknoy_interview/widget/customer_textField.dart';
+
 class AddNewStudent extends StatefulWidget {
   final StudentModel? studentModel;
   const AddNewStudent({Key? key, this.studentModel}) : super(key: key);
@@ -105,9 +107,12 @@ class _AddNewStudentState extends State<AddNewStudent> {
                   SizedBox(
                     height: 80,
                   ),
-                  buildTextField("Student Name", controller: studentName),
-                  buildTextField("Class Name", controller: className),
-                  buildTextField("Email Address", controller: email),
+                  CustomTextField(
+                      controller: studentName, hintText: "Student Name"),
+                  CustomTextField(
+                      controller: className, hintText: "Class Name"),
+                  CustomTextField(controller: email, hintText: "Email Address"),
+
                   buildGenderDropdown(),
                   const SizedBox(
                     height: 10,
@@ -125,10 +130,11 @@ class _AddNewStudentState extends State<AddNewStudent> {
                           if (value!.isEmpty) {
                             return "Required";
                           }
+                          return "";
                         },
                         controller: dob,
                         decoration: InputDecoration(
-                          hintText: "DOB",
+                          labelText: "DOB",
                           border: const OutlineInputBorder(),
                           suffixIcon: Icon(Icons.calendar_today),
                         ),
@@ -165,8 +171,8 @@ class _AddNewStudentState extends State<AddNewStudent> {
   DropdownButtonFormField<String> buildGenderDropdown() {
     return DropdownButtonFormField<String>(
         value: selectedGender,
-        decoration: const InputDecoration(border: OutlineInputBorder()),
-        hint: const Text("Gender"),
+        decoration: const InputDecoration(
+            border: OutlineInputBorder(), labelText: "Gender"),
         items: const [
           DropdownMenuItem(
             value: "Male",
@@ -184,7 +190,7 @@ class _AddNewStudentState extends State<AddNewStudent> {
         });
   }
 
-  buildDepartmentDropdown() {
+  Widget buildDepartmentDropdown() {
     return StreamBuilder<QuerySnapshot>(
         stream: CRUD.streamData("department"),
         builder: (context, snapshot) {
@@ -194,7 +200,8 @@ class _AddNewStudentState extends State<AddNewStudent> {
           }
           return DropdownButtonFormField<String>(
               value: selectedDepartmentId,
-              decoration: const InputDecoration(border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: "Department"),
               hint: const Text("Department"),
               items: List.generate(
                   snapshot.data!.docs.length,
@@ -210,13 +217,15 @@ class _AddNewStudentState extends State<AddNewStudent> {
         });
   }
 
-  buildSubmitButton(Size size, BuildContext context) {
+  Row buildSubmitButton(Size size, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          color: Colors.black,
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(4)),
           width: 150,
+          height: 55,
           child: IconButton(
             onPressed: () => widget.studentModel == null
                 ? handleAddNewStudent()
@@ -239,6 +248,7 @@ class _AddNewStudentState extends State<AddNewStudent> {
             if (value!.isEmpty) {
               return "Required";
             }
+            return "";
           },
           controller: controller,
           decoration: InputDecoration(

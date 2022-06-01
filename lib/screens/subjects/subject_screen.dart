@@ -18,7 +18,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
   List<String> tableHeaders = <String>[
     "No",
     "Subject",
-    "Score",
+    "Max Score",
   ];
 
   List<DataColumn> dataColumns = [];
@@ -99,8 +99,12 @@ class _SubjectScreenState extends State<SubjectScreen> {
       // color: Colors.red,
       width: size.width * 0.7,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Text(
+            "Subjects",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+          ),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),

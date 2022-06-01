@@ -62,11 +62,12 @@ class _StudentScoreState extends State<StudentScore> {
             ),
             Container(
               width: size.width * .7,
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Choose Department"),
                   SizedBox(
-                    width: 10,
+                    height: 10,
                   ),
                   buildDepartmentDropdown()
                 ],
@@ -132,7 +133,7 @@ class _StudentScoreState extends State<StudentScore> {
     return Container(
         width: size.width * 0.4,
         child: InputScore(
-          studentModel: selectedStudent ?? null,
+          studentModel: selectedStudent,
         ));
   }
 
@@ -240,13 +241,12 @@ class _StudentScoreState extends State<StudentScore> {
             num totalScore = snapshot.data!['subjects'].length > 0
                 ? snapshot.data!['subjects'].fold(0, (a, b) => a + b['score'])
                 : 0;
-
             return StreamBuilder<QuerySnapshot>(
                 stream: CRUD.streamData('subject'),
                 builder: (context, subjectSnapshot) {
                   if (!subjectSnapshot.hasData) return Container();
                   num avg = totalScore / subjectSnapshot.data!.docs.length;
-                  return Text(avg.toString());
+                  return Text(avg.toStringAsFixed(2));
                 });
           }),
     ));
