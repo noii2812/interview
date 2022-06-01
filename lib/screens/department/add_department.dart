@@ -17,6 +17,16 @@ class _AddDepartmentState extends State<AddDepartment> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    if (widget.department != null) {
+      setState(() {
+        departmentName.text = widget.department!.name;
+      });
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -24,7 +34,9 @@ class _AddDepartmentState extends State<AddDepartment> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            widget.department == null ? "Add New Student" : "Edit Student",
+            widget.department == null
+                ? "Add New Department"
+                : "Edit Department",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           leading: IconButton(

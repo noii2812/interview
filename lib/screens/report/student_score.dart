@@ -93,6 +93,8 @@ class _StudentScoreState extends State<StudentScore> {
                         snapshot.data!.docs
                             .map((e) => StudentModel.from(e))).toList();
                     return DataTable(
+                        sortColumnIndex: 4,
+                        sortAscending: true,
                         headingTextStyle:
                             const TextStyle(fontWeight: FontWeight.bold),
                         border: TableBorder.all(color: Colors.grey),
@@ -238,14 +240,16 @@ class _StudentScoreState extends State<StudentScore> {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return Container();
-            num totalScore = snapshot.data!['subjects'].length > 0
+            num totalStudentScore = snapshot.data!['subjects'].length > 0
                 ? snapshot.data!['subjects'].fold(0, (a, b) => a + b['score'])
                 : 0;
             return StreamBuilder<QuerySnapshot>(
                 stream: CRUD.streamData('subject'),
                 builder: (context, subjectSnapshot) {
                   if (!subjectSnapshot.hasData) return Container();
-                  num avg = totalScore / subjectSnapshot.data!.docs.length;
+                  num totalSubjectScore = subjectSnapshot.data!.docs
+                      .fold(0, (a, b) => a + b['score']);
+                  num avg = (totalStudentScore / totalSubjectScore) * 100;
                   return Text(avg.toStringAsFixed(2));
                 });
           }),

@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:soknoy_interview/model/student_model.dart';
 import 'package:soknoy_interview/model/subject_model.dart';
 import 'package:soknoy_interview/utils/crud.dart';
-import 'dart:js' as js;
 
 import 'package:soknoy_interview/widget/customer_textField.dart';
 
@@ -48,60 +47,62 @@ class _InputScoreState extends State<InputScore> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: buildInputScoreAppBar(context),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: size.width * 0.3,
-            child: Form(
-              key: _formKey,
-              child: ScrollConfiguration(
-                behavior:
-                    ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                child: SingleChildScrollView(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                        ),
-                        buildStudentNameTextField(),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Subjects",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        StreamBuilder<QuerySnapshot>(
-                            stream: CRUD.streamData("subject"),
-                            builder: ((context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return Container();
-                              }
-                              subjects = List.from(snapshot.data!.docs
-                                  .map((e) => SubjectModel.from(e)));
-                              return Column(
-                                children: [
-                                  buildScoreTextInputGridView(),
-                                  buildSubmitButton(size, context)
-                                ],
-                              );
-                            })),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ]),
+      body: widget.studentModel == null
+          ? Container()
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: size.width * 0.3,
+                  child: Form(
+                    key: _formKey,
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context)
+                          .copyWith(scrollbars: false),
+                      child: SingleChildScrollView(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 50,
+                              ),
+                              buildStudentNameTextField(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Subjects",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              StreamBuilder<QuerySnapshot>(
+                                  stream: CRUD.streamData("subject"),
+                                  builder: ((context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return Container();
+                                    }
+                                    subjects = List.from(snapshot.data!.docs
+                                        .map((e) => SubjectModel.from(e)));
+                                    return Column(
+                                      children: [
+                                        buildScoreTextInputGridView(),
+                                        buildSubmitButton(size, context)
+                                      ],
+                                    );
+                                  })),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ]),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -124,7 +125,7 @@ class _InputScoreState extends State<InputScore> {
   GridView buildScoreTextInputGridView() {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 2.8, crossAxisSpacing: 10),
+            crossAxisCount: 2, childAspectRatio: 2.5, crossAxisSpacing: 10),
         shrinkWrap: true,
         itemCount: subjects.length,
         itemBuilder: (context, index) {
@@ -156,16 +157,23 @@ class _InputScoreState extends State<InputScore> {
           height: 5,
         ),
         TextFormField(
-          validator: (value) {
-            if (value!.isEmpty) {
-              return "Required";
-            } else if (num.parse(value) < 0 ||
+          keyboardType: TextInputType.number,
+          validator: (String? value) {
+            if ((value!.isNotEmpty) && num.parse(value) < 0 ||
                 num.parse(value) > subjects[index].score) {
               return "invalid score";
             }
+            return null;
           },
           controller: _subjectControllers[index],
           decoration: InputDecoration(
+              suffixIcon: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("/" + subjects[index].score.toString(),
+                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                ],
+              ),
               labelText: subjects[index].name,
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(4))),
@@ -222,7 +230,11 @@ class _InputScoreState extends State<InputScore> {
       studentName.text = widget.studentModel!.studentName;
       selectedStudentId = widget.studentModel!.documentReference.id;
     }
-    return CustomTextField(controller: studentName, hintText: "StudentName");
+    return CustomTextField(
+      readOnly: true,
+      controller: studentName,
+      hintText: "StudentName",
+    );
   }
 
   buildSubjectDropdown() {
@@ -296,6 +308,7 @@ class _InputScoreState extends State<InputScore> {
             if (value!.isEmpty) {
               return "Required";
             }
+            return null;
           },
           controller: controller,
           decoration: InputDecoration(

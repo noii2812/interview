@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  final bool? readOnly;
   const CustomTextField(
-      {Key? key, required this.controller, required this.hintText})
+      {Key? key,
+      required this.controller,
+      required this.hintText,
+      this.readOnly = false})
       : super(key: key);
 
   @override
@@ -18,8 +20,10 @@ class CustomTextField extends StatelessWidget {
             if (value!.isEmpty) {
               return "Required";
             }
+            return null;
           },
           controller: controller,
+          readOnly: readOnly!,
           decoration: InputDecoration(
               labelText: hintText,
               border:

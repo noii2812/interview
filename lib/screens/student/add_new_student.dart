@@ -130,7 +130,7 @@ class _AddNewStudentState extends State<AddNewStudent> {
                           if (value!.isEmpty) {
                             return "Required";
                           }
-                          return "";
+                          return null;
                         },
                         controller: dob,
                         decoration: InputDecoration(

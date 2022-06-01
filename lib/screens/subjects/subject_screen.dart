@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:soknoy_interview/model/department_model.dart';
 import 'package:soknoy_interview/model/subject_model.dart';
-import 'package:soknoy_interview/screens/department/add_department.dart';
 import 'package:soknoy_interview/screens/subjects/add_new_subject.dart';
 import 'package:soknoy_interview/utils/crud.dart';
 

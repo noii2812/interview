@@ -95,7 +95,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
     return ScreeTitleWidget(scaffoldKey: _scaffoldKey);
   }
 
-  DataCell buildOptionsButtons(DepartmentModel student) {
+  DataCell buildOptionsButtons(DepartmentModel department) {
     return DataCell(Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -105,7 +105,14 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
               Icons.delete,
               color: Colors.red.withOpacity(.8),
             )),
-        TextButton(onPressed: () {}, child: const Icon(Icons.edit)),
+        TextButton(
+            onPressed: () {
+              setState(() {
+                selectedDepartment = department;
+              });
+              _scaffoldKey.currentState!.openEndDrawer();
+            },
+            child: const Icon(Icons.edit)),
       ],
     ));
   }

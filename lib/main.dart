@@ -35,6 +35,8 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return NavigationView(
       pane: NavigationPane(
+          header: Container(),
+          displayMode: PaneDisplayMode.auto,
           selected: selectedPageIndex,
           onChanged: (pageIndex) {
             setState(() {
