@@ -5,12 +5,13 @@ class CRUD {
     return await FirebaseFirestore.instance.collection(collection).get();
   }
 
-  static Stream<QuerySnapshot> streamData(String collection) async* {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> streamData(
+      String collection) async* {
     yield* FirebaseFirestore.instance.collection(collection).snapshots();
   }
 
-  static Stream<QuerySnapshot> streamDataByField(
-      String collection, String queryField, String queryValue) async* {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> streamDataByField(
+      String collection, String queryField, dynamic queryValue) async* {
     yield* FirebaseFirestore.instance
         .collection(collection)
         .where(queryField, isEqualTo: queryValue)

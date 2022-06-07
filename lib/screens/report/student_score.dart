@@ -78,7 +78,7 @@ class _StudentScoreState extends State<StudentScore> {
             ),
             SizedBox(
               width: size.width * 0.7,
-              child: StreamBuilder<QuerySnapshot>(
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                   stream: selectedDepartmentId != null
                       ? CRUD.streamDataByField(
                           "student", "departmentId", selectedDepartmentId!)
@@ -90,8 +90,10 @@ class _StudentScoreState extends State<StudentScore> {
                       );
                     }
                     List<StudentModel> students = List<StudentModel>.from(
-                        snapshot.data!.docs
-                            .map((e) => StudentModel.from(e))).toList();
+                            snapshot.data!.docs
+                                .map((e) => StudentModel.from(e)))
+                        .where((element) => !element.isDisabled)
+                        .toList();
                     return DataTable(
                         sortColumnIndex: 4,
                         sortAscending: true,

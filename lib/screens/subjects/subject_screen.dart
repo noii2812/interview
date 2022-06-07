@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:soknoy_interview/model/subject_model.dart';
+import 'package:soknoy_interview/repository/subject_repository.dart';
 import 'package:soknoy_interview/screens/subjects/add_new_subject.dart';
 import 'package:soknoy_interview/utils/crud.dart';
 
@@ -60,7 +61,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
             SizedBox(
               width: size.width * 0.7,
               child: StreamBuilder<QuerySnapshot>(
-                  stream: CRUD.streamData("subject"),
+                  stream: SubjectFunctions.streamSubjects(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(

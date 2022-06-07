@@ -9,6 +9,8 @@ class StudentModel {
   final String dob;
   final String departmentId;
   final List<Subjects> subjects;
+  final bool isDisabled;
+
   StudentModel.data(this.documentReference,
       {required this.studentName,
       required this.className,
@@ -16,18 +18,20 @@ class StudentModel {
       required this.gender,
       required this.dob,
       required this.departmentId,
-      required this.subjects});
+      required this.subjects,
+      required this.isDisabled});
 
-  factory StudentModel.from(DocumentSnapshot document) {
+  factory StudentModel.from(DocumentSnapshot<Map<String, dynamic>> document) {
     return StudentModel.data(document.reference,
-        studentName: document['name'],
-        className: document['className'],
-        email: document['email'],
-        gender: document['gender'],
-        dob: document['dob'],
-        departmentId: document['departmentId'],
+        studentName: document.data()?['name'],
+        className: document.data()?['className'],
+        email: document.data()?['email'],
+        gender: document.data()?['gender'],
+        dob: document.data()?['dob'],
+        departmentId: document.data()?['departmentId'],
         subjects: List<Subjects>.from(
-            document["subjects"].map((x) => Subjects.fromJson(x))));
+            document.data()?["subjects"].map((x) => Subjects.fromJson(x))),
+        isDisabled: document.data()!['isDisabled'] ?? false);
   }
 }
 

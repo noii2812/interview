@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:soknoy_interview/model/student_model.dart';
+import 'package:soknoy_interview/repository/student_repository.dart';
 import 'package:soknoy_interview/utils/crud.dart';
 import 'dart:js' as js;
 
@@ -25,7 +26,7 @@ class _AddNewStudentState extends State<AddNewStudent> {
   String? selectedDepartmentId;
 
   final _formKey = GlobalKey<FormState>();
-  handleAddNewStudent() {
+  handleAddNewStudent() async {
     var body = {
       "name": studentName.text,
       "className": className.text,
@@ -36,9 +37,8 @@ class _AddNewStudentState extends State<AddNewStudent> {
       "subjects": []
     };
     if (_formKey.currentState!.validate()) {
-      CRUD.addDoc("student", body).then((value) {
-        if (value != null) Navigator.pop(context);
-      });
+      await StudentFuctions.addNewStudent(body)
+          .then((val) => Navigator.pop(context));
     }
   }
 
@@ -52,8 +52,8 @@ class _AddNewStudentState extends State<AddNewStudent> {
       "departmentId": selectedDepartmentId
     };
     if (_formKey.currentState!.validate()) {
-      CRUD
-          .updateDoc("student", widget.studentModel!.documentReference.id, body)
+      StudentFuctions.updateStudent(
+              widget.studentModel!.documentReference.id, body)
           .then((value) {
         Navigator.pop(context);
         js.context.callMethod("showAlert",
@@ -194,7 +194,6 @@ class _AddNewStudentState extends State<AddNewStudent> {
     return StreamBuilder<QuerySnapshot>(
         stream: CRUD.streamData("department"),
         builder: (context, snapshot) {
-          print(snapshot.data?.docs.length);
           if (!snapshot.hasData) {
             return Container();
           }

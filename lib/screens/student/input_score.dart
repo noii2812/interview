@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:soknoy_interview/model/student_model.dart';
 import 'package:soknoy_interview/model/subject_model.dart';
 import 'package:soknoy_interview/utils/crud.dart';
@@ -56,6 +59,7 @@ class _InputScoreState extends State<InputScore> {
                   width: size.width * 0.3,
                   child: Form(
                     key: _formKey,
+                    onChanged: () {},
                     child: ScrollConfiguration(
                       behavior: ScrollConfiguration.of(context)
                           .copyWith(scrollbars: false),
@@ -144,7 +148,6 @@ class _InputScoreState extends State<InputScore> {
                       .score
                       .toString()
                   : ""));
-
           return buildScoreTextInputTIle(index);
         });
   }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:soknoy_interview/model/student_model.dart';
+import 'package:soknoy_interview/repository/student_repository.dart';
 import 'package:soknoy_interview/screens/student/add_new_student.dart';
 import 'package:soknoy_interview/utils/crud.dart';
 import 'dart:js' as js;
@@ -72,17 +73,17 @@ class _StudentScreenState extends State<StudentScreen>
             ),
             SizedBox(
               width: size.width * 0.7,
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: CRUD.streamData("student"),
+              child: StreamBuilder<List<StudentModel>>(
+                  stream: StudentFuctions.streamStudents(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(
                         child: Text("No Data"),
                       );
                     }
-                    List<StudentModel> students = List<StudentModel>.from(
-                        snapshot.data!.docs
-                            .map((e) => StudentModel.from(e))).toList();
+                    // print(snapshot.data?.docs);
+                    List<StudentModel> students =
+                        List<StudentModel>.from(snapshot.data!);
                     return DataTable(
                         headingTextStyle:
                             const TextStyle(fontWeight: FontWeight.bold),
@@ -131,7 +132,8 @@ class _StudentScreenState extends State<StudentScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         TextButton(
-            onPressed: () => handleDeleteStudent(student),
+            onPressed: () =>
+                StudentFuctions.deleteStudent(student.documentReference.id),
             child: Icon(
               Icons.delete,
               color: Colors.red.withOpacity(.8),
